@@ -23,7 +23,7 @@ bluetoothctl list
 Example Output:
 
 ```text
-Controller DC:41:A9:FB:7A:C4 raj-laptop [default]
+Controller DC:41:A9:FB:7A:C4 user-laptop [default]
 ```
 
 Bluetooth Address:

@@ -1,233 +1,344 @@
-# Bluetooth Address (MAC Address) Guide
+# IPv6 Address Guide
 
-A Bluetooth address (also called a **Bluetooth MAC Address** or **BD Address**) is a unique identifier assigned to a Bluetooth device.
+This guide explains how to find the IPv6 address on Linux, Windows, and macOS devices.
+
+---
+
+# What is an IPv6 Address?
+
+An IPv6 address is the newer version of IP addressing used on networks and the Internet.
 
 Example:
 
 ```text
-DC:41:A9:FB:7A:C4
+2001:db8:85a3::8a2e:370:7334
 ```
+
+Unlike IPv4, IPv6 uses 128 bits and is written in hexadecimal.
 
 ---
 
 # Linux
 
-## Method 1: Using bluetoothctl
+## Method 1: Using ip Command
 
-Run:
+Show all network interfaces and IPv6 addresses:
 
 ```bash
-bluetoothctl list
+ip -6 addr
 ```
 
 Example Output:
 
 ```text
-Controller DC:41:A9:FB:7A:C4 raj-laptop [default]
+2: wlp7s0: <BROADCAST,MULTICAST,UP,LOWER_UP>
+    inet6 2405:201:xxxx:xxxx::1234/64 scope global
+    inet6 fe80::abcd:1234:5678:90ef/64 scope link
 ```
 
-Bluetooth Address:
+### Address Types
+
+- Global IPv6 Address:
 
 ```text
-DC:41:A9:FB:7A:C4
+2405:201:xxxx:xxxx::1234
+```
+
+- Link-Local IPv6 Address:
+
+```text
+fe80::abcd:1234:5678:90ef
 ```
 
 ---
 
-## Method 2: Using hciconfig
-
-Run:
+## Method 2: Show Only IPv6 Addresses
 
 ```bash
-hciconfig
+ip -6 addr show
 ```
-
-Example Output:
-
-```text
-hci0: Type: Primary
-    BD Address: DC:41:A9:FB:7A:C4
-```
-
-The value after **BD Address** is the Bluetooth MAC Address.
 
 ---
 
-## Method 3: View Nearby Devices
-
-List discovered devices:
+## Method 3: View IPv6 Routing Table
 
 ```bash
-bluetoothctl devices
+ip -6 route
 ```
 
-Or scan for devices:
-
-```bash
-hcitool scan
-```
-
-Example Output:
+Example:
 
 ```text
-Scanning ...
-AA:BB:CC:DD:EE:FF Phone
-11:22:33:44:55:66 Headphones
+default via fe80::1 dev wlp7s0
 ```
 
 ---
 
 # Windows
 
-## Method 1: Using Settings
+## Method 1: Command Prompt
 
-1. Open **Settings**
-2. Go to **Bluetooth & devices**
-3. Select the Bluetooth device
-4. Open **Properties** or **More device information**
-5. View the Bluetooth Address
+Open Command Prompt and run:
 
----
-
-## Method 2: Using PowerShell
-
-Open PowerShell and run:
-
-```powershell
-Get-PnpDevice | findstr Bluetooth
-```
-
-You can also view network adapters:
-
-```powershell
-Get-NetAdapter
-```
-
----
-
-## Method 3: Using Device Manager
-
-1. Press `Win + X`
-2. Open **Device Manager**
-3. Expand **Bluetooth**
-4. Right-click your Bluetooth adapter
-5. Select **Properties**
-6. Open the **Details** tab
-7. Look for **Bluetooth Device Address**
-
----
-
-# macOS
-
-## Method 1: System Information
-
-1. Click the **Apple Menu**
-2. Select **About This Mac**
-3. Click **System Report**
-4. Select **Bluetooth**
-
-The Bluetooth controller information will be displayed, including the address.
-
----
-
-## Method 2: Terminal
-
-Run:
-
-```bash
-system_profiler SPBluetoothDataType
+```cmd
+ipconfig
 ```
 
 Example Output:
 
 ```text
-Address: DC-41-A9-FB-7A-C4
+Wireless LAN adapter Wi-Fi:
+
+   IPv6 Address . . . . . . . . . . :
+   2405:201:xxxx:xxxx::1234
+
+   Link-local IPv6 Address . . . . :
+   fe80::abcd:1234:5678:90ef%15
 ```
 
 ---
 
-# Ubuntu Quick Commands
+## Method 2: PowerShell
 
-Show Bluetooth Controller:
-
-```bash
-bluetoothctl list
+```powershell
+Get-NetIPAddress -AddressFamily IPv6
 ```
 
-Show Detailed Bluetooth Information:
-
-```bash
-hciconfig
-```
-
-List Discovered Devices:
-
-```bash
-bluetoothctl devices
-```
-
----
-
-# Example Bluetooth Address
+Example Output:
 
 ```text
-DC:41:A9:FB:7A:C4
+IPAddress         : 2405:201:xxxx:xxxx::1234
+InterfaceAlias    : Wi-Fi
+AddressFamily     : IPv6
 ```
 
-Format:
+---
+
+## Method 3: Network Settings
+
+1. Open **Settings**
+2. Go to **Network & Internet**
+3. Select your connection
+4. Open **Hardware Properties**
+5. View the IPv6 Address
+
+---
+
+# macOS
+
+## Method 1: Terminal
+
+Show IPv6 information:
+
+```bash
+ifconfig
+```
+
+Example Output:
 
 ```text
-XX:XX:XX:XX:XX:XX
-```
-
-- 6 bytes (48 bits)
-- Written in hexadecimal
-- Unique to each Bluetooth adapter
-
----
-
-# Troubleshooting
-
-## Bluetooth Not Found
-
-Check Bluetooth service status:
-
-```bash
-systemctl status bluetooth
-```
-
-Start Bluetooth service:
-
-```bash
-sudo systemctl start bluetooth
-```
-
-Enable Bluetooth at boot:
-
-```bash
-sudo systemctl enable bluetooth
+en0:
+    inet6 fe80::abcd:1234:5678:90ef%en0 prefixlen 64
+    inet6 2405:201:xxxx:xxxx::1234 prefixlen 64
 ```
 
 ---
 
-## Check Bluetooth Hardware
+## Method 2: Network Setup
 
 ```bash
-lsusb | grep -i bluetooth
+networksetup -getinfo Wi-Fi
+```
+
+Example Output:
+
+```text
+IPv6: Automatic
+IPv6 IP address: 2405:201:xxxx:xxxx::1234
+```
+
+---
+
+## Method 3: System Settings
+
+1. Open **System Settings**
+2. Select **Network**
+3. Choose the active connection
+4. Click **Details**
+5. View the IPv6 Address
+
+---
+
+# Find IPv6 Address of Another Device
+
+## Linux
+
+Use Neighbor Discovery:
+
+```bash
+ip -6 neigh
+```
+
+Example:
+
+```text
+fe80::1234:5678:abcd:ef01 dev wlp7s0 lladdr aa:bb:cc:dd:ee:ff
+```
+
+---
+
+## Windows
+
+```cmd
+netsh interface ipv6 show neighbors
+```
+
+---
+
+## macOS
+
+```bash
+ndp -a
+```
+
+Example:
+
+```text
+fe80::1234:5678:abcd:ef01
+```
+
+---
+
+# Test IPv6 Connectivity
+
+## Linux / macOS
+
+```bash
+ping6 google.com
 ```
 
 or
 
 ```bash
-lspci | grep -i bluetooth
+ping -6 google.com
 ```
 
 ---
 
-## Verify Bluetooth Controller
+## Windows
 
-```bash
-bluetoothctl list
+```cmd
+ping -6 google.com
 ```
 
-If no controller appears, verify drivers and hardware support.
+---
+
+# Check Public IPv6 Address
+
+## Linux / macOS
+
+```bash
+curl -6 ifconfig.me
+```
+
+---
+
+## Windows PowerShell
+
+```powershell
+curl.exe -6 ifconfig.me
+```
+
+---
+
+# IPv6 Address Types
+
+| Type | Prefix | Example |
+|--------|--------|--------|
+| Global Unicast | 2000::/3 | 2405:201:xxxx::1234 |
+| Link-Local | fe80::/10 | fe80::abcd:1234 |
+| Loopback | ::1 | ::1 |
+| Multicast | ff00::/8 | ff02::1 |
+
+---
+
+# Quick Commands Summary
+
+## Linux
+
+```bash
+ip -6 addr
+ip -6 route
+ip -6 neigh
+```
+
+## Windows
+
+```cmd
+ipconfig
+netsh interface ipv6 show neighbors
+```
+
+```powershell
+Get-NetIPAddress -AddressFamily IPv6
+```
+
+## macOS
+
+```bash
+ifconfig
+ndp -a
+networksetup -getinfo Wi-Fi
+```
+
+---
+
+# Troubleshooting
+
+## Verify IPv6 is Enabled
+
+### Linux
+
+```bash
+cat /proc/sys/net/ipv6/conf/all/disable_ipv6
+```
+
+Output:
+
+```text
+0
+```
+
+means IPv6 is enabled.
+
+---
+
+### Windows
+
+```cmd
+netsh interface ipv6 show interfaces
+```
+
+---
+
+### macOS
+
+```bash
+networksetup -getinfo Wi-Fi
+```
+
+---
+
+# Example IPv6 Address
+
+```text
+2405:201:abcd:1234:5678:9abc:def0:1234
+```
+
+Compressed Form:
+
+```text
+2405:201:abcd:1234::1234
+```
+
+IPv6 addresses may appear in full or compressed format.
